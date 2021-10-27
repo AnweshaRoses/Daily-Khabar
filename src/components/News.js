@@ -11,12 +11,11 @@ const News=(props)=> {
     const [loading, setLoading] = useState([true])
     const [page, setPage] = useState(1)
     const [totalResults, setTotalResults] = useState(0)
-    // document.title=`${capitalizeFirst(props.category)}-Daily Khabar`;
     const capitalizeFirst=(string)=>{
         return string.charAt(0).toUpperCase()+string.slice(1);
     }
-
-
+    
+    
     const updatenews=async()=>{
         props.setProgress(10);
         const url=`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=a0e81d64ba744c76b4c945416c038e00&page=${page}&pageSize=${props.pageSize}`;
@@ -29,25 +28,17 @@ const News=(props)=> {
         setTotalResults(parsedData.totalResults)
         setLoading(false)
         props.setProgress(100);
-
+        
     }
     useEffect(() => {
+        document.title=`${capitalizeFirst(props.category)}-Daily Khabar`;
         updatenews();
-
+        //eslint-disable-next-line
     }, [])
 
-    // const handlePrevClick=async()=>{
-    //     setPage(page-1)
-
-    //     updatenews();
-    // }
-    // const handleNextClick=async()=>{
-    //     setPage(page+1)
-    //     updatenews();
-    // }
     const fetchMoreData = async() => {
+        const url=`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=a0e81d64ba744c76b4c945416c038e00&page=${page+1}&pageSize=${props.pageSize}`;
         setPage(page+1)
-        const url=`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=a0e81d64ba744c76b4c945416c038e00&page=${page}&pageSize=${props.pageSize}`;
         let data= await fetch(url);
         let parsedData= await data.json()
         setArticles(articles.concat(parsedData.articles))
@@ -55,7 +46,7 @@ const News=(props)=> {
       };
         return (
             <>
-                <h1 className="text-center" style={{margin: '40px 0px'}}> Top Headlines on {capitalizeFirst(props.category)} </h1>
+                <h1 className="text-center" style={{margin: '40px 0px',marginTop:'90px'}}> Top Headlines on {capitalizeFirst(props.category)} </h1>
                 {loading && <Spinner/>}
                 <InfiniteScroll dataLength={articles.length}next={fetchMoreData} 
                 hasMore={articles.length!==totalResults}loader={<Spinner/>}>
